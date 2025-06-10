@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Olympics Data Analysis</title>
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+        /* Background animation with moving gradient */
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(-45deg, #1e3c72, #2a5298, #1e3c72, #27496d);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: white;
+        }
+        @keyframes gradientBG {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+        .form-container {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+        h1 {
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-align: center;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+        }
+        .plots img {
+            max-width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 0 12px rgba(0,0,0,0.7);
+            margin-bottom: 30px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 15px;
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.7);
+            margin-top: 3rem;
+            user-select: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Olympics Data Analysis</h1>
+
+        <div class="form-container mx-auto col-md-8">
+            <form method="POST" action="/">
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="player">Player Name</label>
+                        <input
+                            list="players"
+                            type="text"
+                            class="form-control"
+                            id="player"
+                            name="player"
+                            placeholder="e.g. Michael Phelps"
+                            value="{{ filters.player }}"
+                            autocomplete="off"
+                        />
+                        <datalist id="players">
+                            {% for player in players %}
+                            <option value="{{ player }}"></option>
+                            {% endfor %}
+                        </datalist>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="country">Country</label>
+                        <input
+                            list="countries"
+                            type="text"
+                            class="form-control"
+                            id="country"
+                            name="country"
+                            placeholder="e.g. USA"
+                            value="{{ filters.country }}"
+                            autocomplete="off"
+                        />
+                        <datalist id="countries">
+                            {% for country in countries %}
+                            <option value="{{ country }}"></option>
+                            {% endfor %}
+                        </datalist>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="year">Year</label>
+                        <input
+                            type="number"
+                            class="form-control"
+                            id="year"
+                            name="year"
+                            min="1896"
+                            max="2024"
+                            placeholder="e.g. 2008"
+                            value="{{ filters.year }}"
+                        />
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="medal">Medal</label>
+                        <select class="form-control" id="medal" name="medal">
+                            <option value="" {% if filters.medal == '' %}selected{% endif %}>Any</option>
+                            <option value="Gold" {% if filters.medal == 'Gold' %}selected{% endif %}>Gold</option>
+                            <option value="Silver" {% if filters.medal == 'Silver' %}selected{% endif %}>Silver</option>
+                            <option value="Bronze" {% if filters.medal == 'Bronze' %}selected{% endif %}>Bronze</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block mt-3">Search</button>
+            </form>
+        </div>
+
+        <div class="plots col-md-10 mx-auto">
+            <h3 class="mb-4 text-center" style="text-shadow: 0 0 6px black;">Medals by Country</h3>
+            <img src="{{ url_for('static', filename='medals_by_country.png') }}" alt="Medals by Country Plot" />
+            <h3 class="mb-4 text-center mt-5" style="text-shadow: 0 0 6px black;">Medals by Player</h3>
+            <img src="{{ url_for('static', filename='medals_by_player.png') }}" alt="Medals by Player Plot" />
+            <h3 class="mb-4 text-center mt-5" style="text-shadow: 0 0 6px black;">Medals by Year</h3>
+            <img src="{{ url_for('static', filename='medals_by_year.png') }}" alt="Medals by Year Plot" />
+            <h3 class="mb-4 text-center mt-5" style="text-shadow: 0 0 6px black;">Medals by Top Countries Over Years</h3>
+            <img src="{{ url_for('static', filename='medals_by_country_year.png') }}" alt="Medals by Country-Year Plot" />
+        </div>
+
+        <footer>
+            &copy; 2025 Olympics Data Analysis. Built with Flask &amp; Matplotlib.
+        </footer>
+    </div>
+</body>
+</html>
